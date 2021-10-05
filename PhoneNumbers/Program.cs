@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace PhoneNumbers
 {
@@ -7,79 +10,26 @@ namespace PhoneNumbers
     {
         static void Main(string[] args)
         {
-            List<string> phoneNumbers = new List<string>() {"91125426", "97625992", "911"};
-            Stack<string> myStack = new Stack<string>(phoneNumbers);
+            BubbleSort bubbleSort = new BubbleSort();
+            MergeSort mergeSort = new MergeSort();
+            PrefixList prefixList = new PrefixList();
+
+            List<string> phoneNumbers = new List<string>() {"91125426", "8245", "97625992", "912"};
             
+            int maxNumberOfDigits = prefixList.FindMaxNumberOfDigits(0, phoneNumbers, 0);
+            List<string> prefixs = prefixList.AddingNumbersToPrefixList(phoneNumbers, maxNumberOfDigits);
+            bool result1 = prefixList.CheckIfPhoneBookIsConsistent(phoneNumbers, prefixs);
+            Console.WriteLine(result1);
 
-            List<string> prefixs = new List<string>();
+            var result = bubbleSort.SortPhoneBook(0, phoneNumbers, 1);
+            // var result = mergeSort.MergeSortPhoneBook(phoneNumbers);
 
-            FindMaxNumberOfDigits(0, phoneNumbers, 0);
+            foreach (var number in result)
+            {
+                Console.WriteLine(number);
+            }
+
+            Console.WriteLine(bubbleSort.CheckIfPhoneBookIsConsistent(0, result));
         }
-
-        public static int FindMaxNumberOfDigits(int i, List<string> phoneNumbers, int maxNumberOfDigits)
-        {
-            int numberOfDigits = phoneNumbers[i].Length;
-            
-            if (numberOfDigits > maxNumberOfDigits)
-            {
-                maxNumberOfDigits = numberOfDigits;
-            }
-            
-            if (i < phoneNumbers.Count - 1)
-            {
-                FindMaxNumberOfDigits(i + 1, phoneNumbers, maxNumberOfDigits);
-            }
-            
-            return maxNumberOfDigits;
-        }
-        
-        public static List<string> AddingNumbersToPrefixList(List<string> prefixs, Stack<string> myStack, int maxNumberOfDigits)
-        {
-            string phoneNumber = myStack.Pop();
-            
-            if (myStack.Count == 0)
-            {
-                if (maxNumberOfDigits != phoneNumber.Length)
-                {
-                    prefixs.Add(phoneNumber);
-                }
-
-                return prefixs;
-            }
-
-            prefixs = AddingNumbersToPrefixList(prefixs, myStack, maxNumberOfDigits);
-
-            if (maxNumberOfDigits != phoneNumber.Length)
-            {
-                prefixs.Add(phoneNumber);
-            }
-
-            return prefixs;
-        }
-        
-        
-        
-        
-        
-        
-        public static int FindMaxNumberOfDigitsTailRecursion(Stack<string> myStack)
-        {
-            int numberOfDigits = myStack.Pop().Length;
-
-            if (myStack.Count == 1)
-            {
-                return numberOfDigits;
-            }
-
-            int recursionFunction = FindMaxNumberOfDigitsTailRecursion(myStack);
-        
-            if (numberOfDigits >= recursionFunction)
-            {
-                return numberOfDigits;
-            }
-        
-            return recursionFunction;
-        }
-
     }
 }
