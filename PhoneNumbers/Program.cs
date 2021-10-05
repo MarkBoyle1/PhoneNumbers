@@ -6,30 +6,23 @@ using System.Linq;
 
 namespace PhoneNumbers
 {
-    public class PhoneBookAnalyser
+    public class Program
     {
         static void Main(string[] args)
         {
-            BubbleSort bubbleSort = new BubbleSort();
-            MergeSort mergeSort = new MergeSort();
-            PrefixList prefixList = new PrefixList();
+            IPhoneBookAnalyser bubbleSort = new BubbleSort();
+            IPhoneBookAnalyser mergeSort = new MergeSort();
+            IPhoneBookAnalyser prefixList = new PrefixList();
 
-            List<string> phoneNumbers = new List<string>() {"91125426", "8245", "97625992", "912"};
-            
-            int maxNumberOfDigits = prefixList.FindMaxNumberOfDigits(0, phoneNumbers, 0);
-            List<string> prefixs = prefixList.AddingNumbersToPrefixList(phoneNumbers, maxNumberOfDigits);
-            bool result1 = prefixList.CheckIfPhoneBookIsConsistent(phoneNumbers, prefixs);
-            Console.WriteLine(result1);
+            List<string> phoneBook = new List<string>() {"91125426", "97625992", "911"};
 
-            var result = bubbleSort.SortPhoneBook(0, phoneNumbers, 1);
-            // var result = mergeSort.MergeSortPhoneBook(phoneNumbers);
+            bool bubbleSortResult = bubbleSort.RunPhoneBookAnalyser(phoneBook);
+            bool mergeSortResult = mergeSort.RunPhoneBookAnalyser(phoneBook);
+            bool prefixListResult = prefixList.RunPhoneBookAnalyser(phoneBook);
 
-            foreach (var number in result)
-            {
-                Console.WriteLine(number);
-            }
-
-            Console.WriteLine(bubbleSort.CheckIfPhoneBookIsConsistent(0, result));
+            Console.WriteLine("BubbleSort Result: " + bubbleSortResult);
+            Console.WriteLine("MergeSort Result: " + mergeSortResult);
+            Console.WriteLine("PrefixList Result: " + prefixListResult);
         }
     }
 }

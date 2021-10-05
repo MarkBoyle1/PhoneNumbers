@@ -1,18 +1,20 @@
+using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using Xunit;
 
 namespace PhoneNumbers.Tests
 {
-    public class MergeSortTests
+    public class PrefixListTests
     {
-        private IPhoneBookAnalyser _mergeSort = new MergeSort();
+        private IPhoneBookAnalyser _prefixList = new PrefixList();
 
         [Fact]
         public void given_phoneBookContains_91125426_97625992_911_when_RunPhoneBookAnalyser_then_return_false()
         {
-            List<string> phoneBook = new List<string>() {"91125426", "97625992", "976"};
+            List<string> phoneBook = new List<string>() {"91125426", "97625992", "911"};
 
-            Assert.False(_mergeSort.RunPhoneBookAnalyser(phoneBook));
+            Assert.False(_prefixList.RunPhoneBookAnalyser(phoneBook));
         }
         
         [Fact]
@@ -20,7 +22,7 @@ namespace PhoneNumbers.Tests
         {
             List<string> phoneBook = new List<string>() {"91125426", "97625992", "912"};
             
-            Assert.True(_mergeSort.RunPhoneBookAnalyser(phoneBook));
+            Assert.True(_prefixList.RunPhoneBookAnalyser(phoneBook));
         }
     }
 }

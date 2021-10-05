@@ -4,46 +4,48 @@ using System.Globalization;
 
 namespace PhoneNumbers
 {
-    public class BubbleSort
+    public class BubbleSort : IPhoneBookAnalyser
     {
-        public bool CheckIfPhoneBookIsConsistent(int i, List<string> phoneBook)
-        {
-            if (i == phoneBook.Count - 1)
-            {
-                return true;
-            }
+        private SortedPhoneBookAnalyser _sortedPhoneBookAnalyser;
 
-            bool isConsistent = CheckIfPhoneBookIsConsistent(i + 1, phoneBook);
-            
-            return !phoneBook[i + 1].StartsWith(phoneBook[i]) && isConsistent;
+        public BubbleSort()
+        {
+            _sortedPhoneBookAnalyser = new SortedPhoneBookAnalyser();
         }
-        public List<string> SortPhoneBook(int i, List<string> phoneBook, int iteration)
+
+        public bool RunPhoneBookAnalyser(List<string> phoneBook)
+        {
+            phoneBook = BubbleSortPhoneBook(0, phoneBook, 1);
+            bool result = _sortedPhoneBookAnalyser.CheckIfSortedPhoneBookIsConsistent(0, phoneBook);
+            return result;
+        }
+        private List<string> BubbleSortPhoneBook(int i, List<string> phoneBook, int iteration)
         {
             if (i == phoneBook.Count - 2)
             {
-                return OrderTwoNumbers(phoneBook, i);
+                return OrderCurrentTwoNumbers(phoneBook, i);
             }
         
-            phoneBook = SortPhoneBook(i + 1, phoneBook, iteration);
+            phoneBook = BubbleSortPhoneBook(i + 1, phoneBook, iteration);
 
             if (i == 0)
             {
-                phoneBook = OrderTwoNumbers(phoneBook, i);
+                phoneBook = OrderCurrentTwoNumbers(phoneBook, i);
 
                 if (iteration == phoneBook.Count)
                 {
-                    return OrderTwoNumbers(phoneBook, i);
+                    return OrderCurrentTwoNumbers(phoneBook, i);
                 }
                 else
                 {
-                    SortPhoneBook(i, phoneBook, iteration + 1);
+                    BubbleSortPhoneBook(i, phoneBook, iteration + 1);
                 }
             }
 
-            return OrderTwoNumbers(phoneBook, i);
+            return OrderCurrentTwoNumbers(phoneBook, i);
         }
 
-        public List<string> OrderTwoNumbers(List<string> phoneBook, int i)
+        private List<string> OrderCurrentTwoNumbers(List<string> phoneBook, int i)
         {
             int lengthFirstNumber = phoneBook[i].Length;
             int lengthSecondNumber = phoneBook[i + 1].Length;

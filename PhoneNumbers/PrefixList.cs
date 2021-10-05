@@ -1,11 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace PhoneNumbers
 {
-    public class PrefixList
+    public class PrefixList : IPhoneBookAnalyser
     {
-        public int FindMaxNumberOfDigits(int i, List<string> phoneNumbers, int maxNumberOfDigits)
+        public bool RunPhoneBookAnalyser(List<string> phoneBook)
+        {
+            int maxNumberOfDigits = FindMaxNumberOfDigits(0, phoneBook, 0);
+            List<string> prefixs = CreatePrefixList(phoneBook, maxNumberOfDigits);
+            bool result = CheckIfPhoneBookIsConsistentUsingPrefixList(phoneBook, prefixs);
+            return result;
+        }
+        private int FindMaxNumberOfDigits(int i, List<string> phoneNumbers, int maxNumberOfDigits)
         {
             int numberOfDigits = phoneNumbers[i].Length;
             
@@ -16,13 +24,13 @@ namespace PhoneNumbers
             
             if (i < phoneNumbers.Count - 1)
             {
-                FindMaxNumberOfDigits(i + 1, phoneNumbers, maxNumberOfDigits);
+                maxNumberOfDigits = FindMaxNumberOfDigits(i + 1, phoneNumbers, maxNumberOfDigits);
             }
             
             return maxNumberOfDigits;
         }
         
-        public  List<string> AddingNumbersToPrefixList(List<string> phoneNumbers, int maxNumberOfDigits)
+        private  List<string> CreatePrefixList(List<string> phoneNumbers, int maxNumberOfDigits)
         {
             if (phoneNumbers.Count == 0)
             {
@@ -33,7 +41,7 @@ namespace PhoneNumbers
             List<string> phoneNumbersWithoutFirst = new List<string>(phoneNumbers);
             phoneNumbersWithoutFirst.RemoveAt(0);
             
-            List<string> prefixList = AddingNumbersToPrefixList(phoneNumbersWithoutFirst, maxNumberOfDigits);
+            List<string> prefixList = CreatePrefixList(phoneNumbersWithoutFirst, maxNumberOfDigits);
 
             if (firstNumber.Length < maxNumberOfDigits)
             {
@@ -43,7 +51,7 @@ namespace PhoneNumbers
             return prefixList;
         }
 
-        public bool CheckIfPhoneBookIsConsistent(List<string> phoneNumbers, List<string> prefixList)
+        private bool CheckIfPhoneBookIsConsistentUsingPrefixList(List<string> phoneNumbers, List<string> prefixList)
         {
             if (phoneNumbers.Count == 0)
             {
@@ -54,12 +62,12 @@ namespace PhoneNumbers
             List<string> phoneNumbersWithoutFirst = new List<string>(phoneNumbers);
             phoneNumbersWithoutFirst.RemoveAt(0);
 
-            bool isConsistent = CheckIfPhoneBookIsConsistent(phoneNumbersWithoutFirst, prefixList);
+            bool isConsistent = CheckIfPhoneBookIsConsistentUsingPrefixList(phoneNumbersWithoutFirst, prefixList);
 
             return !CheckIfPhoneNumberContainsPrefix(firstNumber, prefixList) && isConsistent;
         }
 
-        public bool CheckIfPhoneNumberContainsPrefix(string firstNumber, List<string> prefixList)
+        private bool CheckIfPhoneNumberContainsPrefix(string firstNumber, List<string> prefixList)
         {
             if (prefixList.Count == 0)
             {
@@ -75,7 +83,8 @@ namespace PhoneNumbers
             return (firstNumber.StartsWith(firstPrefix) && firstNumber != firstPrefix) || containsPrefix;
         }
 
-        public int FindMaxNumberOfDigitsTailRecursion(Stack<string> phoneNumberStack)
+        //Just added to practise a different style of recursion
+        private int FindMaxNumberOfDigitsTailRecursion(Stack<string> phoneNumberStack)
         {
             int numberOfDigits = phoneNumberStack.Pop().Length;
 

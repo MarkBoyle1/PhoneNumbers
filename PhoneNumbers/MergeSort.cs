@@ -1,12 +1,26 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
 namespace PhoneNumbers
 {
-    public class MergeSort
+    public class MergeSort : IPhoneBookAnalyser
     {
-        public List<string> MergeSortPhoneBook(List<string> phoneBook)
+        private SortedPhoneBookAnalyser _sortedPhoneBookAnalyser;
+
+        public MergeSort()
+        {
+            _sortedPhoneBookAnalyser = new SortedPhoneBookAnalyser();
+        }
+
+        public bool RunPhoneBookAnalyser(List<string> phoneBook)
+        {
+            phoneBook = MergeSortPhoneBook(phoneBook);
+            bool result = _sortedPhoneBookAnalyser.CheckIfSortedPhoneBookIsConsistent(0, phoneBook);
+            return result;
+        }
+        private List<string> MergeSortPhoneBook(List<string> phoneBook)
         {
             if (phoneBook.Count == 1)
             {
@@ -24,7 +38,7 @@ namespace PhoneNumbers
             return MergeTwoHalves(firstHalf, secondHalf, new List<string>());
         }
 
-        public List<string> MergeTwoHalves(List<string> firstHalf, List<string> secondHalf, List<string> mergedList)
+        private List<string> MergeTwoHalves(List<string> firstHalf, List<string> secondHalf, List<string> mergedList)
         {
             if (firstHalf.Count == 0)
             {
@@ -54,7 +68,7 @@ namespace PhoneNumbers
             return mergedList;
         }
 
-        public string SelectLowerNumber(string firstNumber, string secondNumber)
+        private string SelectLowerNumber(string firstNumber, string secondNumber)
         {
             int lengthFirstNumber = firstNumber.Length;
             int lengthSecondNumber = secondNumber.Length;
@@ -63,6 +77,11 @@ namespace PhoneNumbers
 
             int number1 = int.Parse(firstNumber.Substring(0, lengthToCheck), NumberStyles.Any);
             int number2 = int.Parse(secondNumber.Substring(0, lengthToCheck), NumberStyles.Any);
+
+            if (number1 == number2)
+            {
+                return lengthFirstNumber < lengthSecondNumber ? firstNumber : secondNumber;
+            }
 
             return number1 < number2 ? firstNumber : secondNumber;
         }
